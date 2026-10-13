@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Cari Lowongan{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Cari Lowongan</h1>
+  <p class="text-slate-500 text-sm mt-1 mb-6">Temukan pekerjaan yang paling cocok dengan profilmu.</p>
+
+  <form action="/loker" method="get" class="bg-white border border-slate-200 rounded-2xl shadow-sm p-3 flex flex-col md:flex-row gap-2 mb-8">
+    <input name="q" value="{{ q }}" placeholder="Posisi, skill, atau perusahaan…" class="flex-1 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50">
+    <select name="lokasi" class="rounded-xl px-4 py-2.5 text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+      <option value="">Semua lokasi</option>
+      {% for l in locations %}
+      <option value="{{ l }}" {% if l == lokasi %}selected{% endif %}>{{ l }}</option>
+      {% endfor %}
+    </select>
+    <button class="btn-primary text-white px-7 py-2.5 rounded-xl font-bold text-sm">Cari</button>
+  </form>
+
+  <div class="space-y-4">
+  {% for j in jobs %}
+    <a href="/loker/{{ j.id }}" class="block bg-white rounded-2xl border border-slate-200 p-5 card-hover">
+      <div class="flex justify-between items-start gap-4">
+        <div class="flex gap-4 min-w-0">
+          <span class="w-12 h-12 rounded-xl grad-bg text-white font-extrabold grid place-items-center text-xl shrink-0">{{ (j.company_name or '?')[:1].upper() }}</span>
+          <div class="min-w-0">
+            <div class="font-bold text-lg text-slate-900">{{ j.title }}</div>
+            <div class="text-sm text-slate-500 mt-0.5">{{ j.company_name }} · 📍 {{ j.location }} · {{ j.job_type }}</div>
+            <div class="text-indigo-700 font-extrabold mt-1.5 text-sm">{{ format_rp(j.salary_min) }}{% if j.salary_max and j.salary_max > j.salary_min %} <span class="font-semibold text-indigo-400">– {{ format_rp(j.salary_max) }}</span>{% endif %}</div>
+          </div>
+        </div>
+        {% if scores.get(j.id) is not none %}
+        {% set sc = scores.get(j.id) %}
+        <div class="text-center shrink-0 bg-slate-50 rounded-xl px-4 py-2">
+          <div class="text-2xl font-extrabold {% if sc >= 75 %}text-emerald-600{% elif sc >= 50 %}text-amber-600{% else %}text-slate-400{% endif %}">{{ sc }}</div>
+          <div class="text-[11px] text-slate-500 font-medium">skor AI</div>
+        </div>
+        {% endif %}
+      </div>
+    </a>
+  {% else %}
+    <div class="bg-white rounded-2xl border border-slate-200 p-14 text-center">
+      <div class="text-4xl mb-3">🔍</div>
+      <p class="text-slate-500 font-medium">Belum ada lowongan yang cocok.</p>
+      <p class="text-slate-400 text-sm mt-1">Coba kata kunci atau lokasi lain.</p>
+    </div>
+  {% endfor %}
+  </div>
+</div>
+{% endblock %}

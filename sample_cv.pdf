@@ -1,0 +1,73 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 868 >>
+stream
+BT
+/F1 11 Tf
+50 770 Td
+14 TL
+(BUDI SANTOSO) Tj
+T*
+(budi.santoso@email.com | 0812-3456-7890 | Jakarta) Tj
+T*
+() Tj
+T*
+(RINGKASAN) Tj
+T*
+(Fresh graduate Informatika dengan pengalaman magang web development.) Tj
+T*
+(Terbiasa membangun aplikasi web modern menggunakan React dan Python.) Tj
+T*
+() Tj
+T*
+(PENGALAMAN) Tj
+T*
+(Magang Web Developer - PT Startup Kita \(Jan 2025 - Jun 2025\)) Tj
+T*
+(Membangun dashboard admin dengan React, TypeScript, dan integrasi REST API.) Tj
+T*
+(Asisten Praktikum Pemrograman Web - Universitas Indonesia \(2024\)) Tj
+T*
+(Membimbing 40 mahasiswa dalam praktikum JavaScript dan SQL.) Tj
+T*
+() Tj
+T*
+(PENDIDIKAN) Tj
+T*
+(S1 Informatika - Universitas Indonesia \(2021 - 2025\), IPK 3.62) Tj
+T*
+(SMA Negeri 1 Jakarta \(2018 - 2021\)) Tj
+T*
+() Tj
+T*
+(KEAHLIAN) Tj
+T*
+(JavaScript, React, TypeScript, Python, SQL, Git, Figma, Komunikasi, Excel) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000305 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1224
+%%EOF

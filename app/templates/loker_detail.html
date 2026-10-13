@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{{ job.title }} — AILoker{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <a href="/loker" class="text-indigo-700 text-sm font-semibold hover:underline">← Kembali ke daftar</a>
+
+  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 md:p-10 mt-4">
+    <div class="flex items-start gap-4">
+      <span class="w-14 h-14 rounded-2xl grad-bg text-white font-extrabold grid place-items-center text-2xl shrink-0">{{ (job.company_name or '?')[:1].upper() }}</span>
+      <div>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ job.title }}</h1>
+        <p class="text-slate-500 mt-1.5 text-sm">{{ job.company_name }} · 📍 {{ job.location }} · {{ job.job_type }}</p>
+      </div>
+    </div>
+    <p class="text-indigo-700 font-extrabold mt-4 text-lg">{{ format_rp(job.salary_min) }}{% if job.salary_max and job.salary_max > job.salary_min %} <span class="font-semibold text-indigo-400">– {{ format_rp(job.salary_max) }}</span>{% endif %}</p>
+
+    {% if match %}
+    <div class="mt-6 border-2 rounded-2xl p-5 {% if match.score >= 75 %}border-emerald-400 bg-emerald-50/60{% elif match.score >= 50 %}border-amber-400 bg-amber-50/60{% else %}border-slate-300 bg-slate-50{% endif %}">
+      <div class="flex items-center gap-4">
+        <div class="text-center shrink-0">
+          <div class="text-5xl font-extrabold {% if match.score >= 75 %}text-emerald-700{% elif match.score >= 50 %}text-amber-700{% else %}text-slate-500{% endif %}">{{ match.score }}</div>
+          <div class="text-xs text-slate-500 font-semibold">/ 100</div>
+        </div>
+        <div>
+          <div class="font-extrabold text-slate-900">✨ Skor Kecocokan AI untukmu</div>
+          <p class="text-sm text-slate-700 mt-1.5 leading-relaxed">{{ match.explanation }}</p>
+        </div>
+      </div>
+      {% if match.gaps %}
+      <div class="mt-4 pt-4 border-t border-slate-200">
+        <div class="font-bold text-sm text-slate-800">🎯 Tingkatkan ini biar makin cocok:</div>
+        <div class="flex flex-wrap gap-2 mt-2.5">
+          {% for g in match.gaps %}<span class="bg-white border border-amber-300 text-amber-800 text-xs font-semibold px-3 py-1.5 rounded-full">{{ g }}</span>{% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    {% elif user and user.role == 'seeker' %}
+    <div class="mt-6 bg-indigo-50 border border-indigo-200 rounded-2xl p-5 text-sm text-slate-700">
+      ✨ <a href="/profil" class="text-indigo-700 font-bold hover:underline">Upload CV-mu</a> untuk melihat skor kecocokan AI di lowongan ini.
+    </div>
+    {% endif %}
+
+    <div class="mt-8">
+      <h2 class="font-extrabold text-lg text-slate-900 mb-3">Deskripsi Pekerjaan</h2>
+      <div class="whitespace-pre-line text-slate-700 leading-relaxed text-[15px]">{{ job.description }}</div>
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-slate-200">
+      {% if not user %}
+        <a href="/masuk" class="btn-primary inline-block text-white px-8 py-3.5 rounded-xl font-bold shadow-lg shadow-indigo-200">Masuk untuk Melamar</a>
+      {% elif user.role == 'seeker' %}
+        {% if applied %}
+          <span class="inline-block bg-emerald-100 text-emerald-800 px-8 py-3.5 rounded-xl font-bold">✓ Lamaranmu sudah terkirim</span>
+        {% else %}
+          <form action="/loker/{{ job.id }}/lamar" method="post" class="inline">
+            <button class="btn-primary text-white px-8 py-3.5 rounded-xl font-bold shadow-lg shadow-indigo-200">Lamar Sekarang — 1 Klik</button>
+          </form>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Pelamar — {{ job.title }}{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <a href="/perusahaan" class="text-indigo-700 text-sm font-semibold hover:underline">← Dashboard</a>
+  <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight mt-2">Pelamar: {{ job.title }}</h1>
+  <p class="text-slate-500 text-sm mt-1 mb-6">Diurutkan otomatis oleh AI berdasarkan skor kecocokan — lengkap dengan alasannya.</p>
+
+  {% if ranked %}
+  <div class="space-y-4">
+  {% for a in ranked %}
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 md:p-6 flex gap-5 items-start card-hover">
+      <div class="text-center shrink-0 w-20 bg-slate-50 rounded-xl py-3">
+        <div class="text-3xl font-extrabold {% if a.score >= 75 %}text-emerald-600{% elif a.score >= 50 %}text-amber-600{% else %}text-slate-400{% endif %}">{{ a.score }}</div>
+        <div class="text-[11px] text-slate-500 font-medium">/ 100</div>
+        {% if loop.index == 1 %}<div class="text-xl mt-1">🥇</div>{% elif loop.index == 2 %}<div class="text-xl mt-1">🥈</div>{% elif loop.index == 3 %}<div class="text-xl mt-1">🥉</div>{% endif %}
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="font-extrabold text-lg text-slate-900">{{ a.name }}</div>
+        <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">{{ a.reason }}</p>
+        {% if a.profile and a.profile.skills %}
+        <div class="flex flex-wrap gap-1.5 mt-3">
+          {% for s in a.profile.skills[:8] %}<span class="bg-indigo-50 text-indigo-700 text-xs font-semibold px-2.5 py-1 rounded-full">{{ s }}</span>{% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+  {% else %}
+  <div class="bg-white rounded-2xl border border-dashed border-slate-300 p-14 text-center text-slate-500">
+    <div class="text-4xl mb-3">📭</div>
+    <p class="font-medium">Belum ada pelamar untuk lowongan ini.</p>
+    <p class="text-sm mt-1">Bagikan tautan lowongan untuk menjangkau lebih banyak kandidat.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

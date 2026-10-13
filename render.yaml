@@ -1,0 +1,27 @@
+# Render Blueprint — deploy AILoker satu klik (free tier, tanpa kartu kredit).
+# Cara pakai: di dashboard Render → New → Blueprint → hubungkan repo Git ini.
+#
+# AI sudah dikonfigurasi memakai Gemini (gratis, free tier) — semua env var
+# non-rahasia terisi otomatis. SATU-SATUNYA yang perlu diisi manual saat
+# Blueprint meminta: AI_API_KEY (key Gemini dari https://aistudio.google.com/apikey).
+# Key tidak boleh ada di repo publik ini — kalau bocor, kuota bisa dicuri orang.
+services:
+  - type: web
+    name: ailoker
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_SECRET
+        generateValue: true
+      - key: AILOKER_AUTO_SEED
+        value: 1 # isi DB kosong otomatis dengan akun demo + 12 lowongan
+      - key: AI_PROVIDER
+        value: openai_compat
+      - key: AI_BASE_URL
+        value: https://generativelanguage.googleapis.com/v1beta/openai
+      - key: AI_MODEL
+        value: models/gemini-3-flash-preview
+      - key: AI_API_KEY
+        sync: false # <-- isi sekali di dashboard Render (key Gemini milikmu)

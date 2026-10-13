@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Profil Saya{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Profil Saya</h1>
+  <p class="text-slate-500 text-sm mt-1 mb-6">Profil yang rapi = skor kecocokan yang akurat di setiap lowongan.</p>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 md:p-7">
+      <h2 class="font-extrabold text-lg">📄 CV & Profil AI</h2>
+      <p class="text-sm text-slate-500 mt-1 mb-4">Upload CV (PDF, maks 5 MB). AI akan mengekstrak profil terstruktur otomatis.</p>
+      <form action="/profil/upload" method="post" enctype="multipart/form-data" class="flex gap-2">
+        <input type="file" name="cv" accept=".pdf" required class="flex-1 text-sm border border-slate-300 rounded-xl px-3 py-2.5 bg-slate-50">
+        <button class="btn-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm shrink-0">Analisis CV</button>
+      </form>
+      {% if profile %}
+      <div class="mt-6 pt-6 border-t border-slate-100">
+        <div class="font-extrabold text-xl text-slate-900">{{ profile.name }}</div>
+        <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">{{ profile.summary }}</p>
+        {% if profile.skills %}
+        <div class="mt-4"><div class="text-sm font-bold text-slate-700">Skills</div>
+          <div class="flex flex-wrap gap-1.5 mt-2">{% for s in profile.skills %}<span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded-full">{{ s }}</span>{% endfor %}</div>
+        </div>
+        {% endif %}
+        {% if profile.experience %}
+        <div class="mt-4"><div class="text-sm font-bold text-slate-700">Pengalaman</div>
+          <ul class="text-sm text-slate-600 list-disc ml-5 mt-1.5 space-y-1">{% for e in profile.experience %}<li>{{ e }}</li>{% endfor %}</ul>
+        </div>
+        {% endif %}
+        {% if profile.education %}
+        <div class="mt-4"><div class="text-sm font-bold text-slate-700">Pendidikan</div>
+          <ul class="text-sm text-slate-600 list-disc ml-5 mt-1.5 space-y-1">{% for e in profile.education %}<li>{{ e }}</li>{% endfor %}</ul>
+        </div>
+        {% endif %}
+      </div>
+      {% else %}
+      <p class="text-sm text-slate-400 mt-5">Belum ada profil. Upload CV atau isi manual di samping.</p>
+      {% endif %}
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 md:p-7">
+      <h2 class="font-extrabold text-lg">✏️ Edit Profil Manual</h2>
+      <p class="text-sm text-slate-500 mt-1 mb-4">Tidak punya CV siap? Isi manual, hasilnya sama akuratnya.</p>
+      <form action="/profil/simpan" method="post" class="space-y-4">
+        <div><label class="text-sm font-bold text-slate-700">Nama</label>
+          <input name="nama" value="{{ profile.name if profile else user.name }}" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 mt-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></div>
+        <div><label class="text-sm font-bold text-slate-700">Ringkasan</label>
+          <textarea name="ringkasan" rows="3" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 mt-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ profile.summary if profile else '' }}</textarea></div>
+        <div><label class="text-sm font-bold text-slate-700">Skills <span class="font-normal text-slate-400">(pisahkan dengan koma)</span></label>
+          <input name="skills" value="{{ ', '.join(profile.skills) if profile else '' }}" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 mt-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="python, komunikasi, excel"></div>
+        <div><label class="text-sm font-bold text-slate-700">Pengalaman <span class="font-normal text-slate-400">(satu per baris)</span></label>
+          <textarea name="pengalaman" rows="3" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 mt-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ '\n'.join(profile.experience) if profile else '' }}</textarea></div>
+        <div><label class="text-sm font-bold text-slate-700">Pendidikan <span class="font-normal text-slate-400">(satu per baris)</span></label>
+          <textarea name="pendidikan" rows="2" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 mt-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ '\n'.join(profile.education) if profile else '' }}</textarea></div>
+        <button class="btn-primary text-white px-6 py-2.5 rounded-xl font-bold text-sm">Simpan Profil</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 md:p-7 mt-6">
+    <h2 class="font-extrabold text-lg mb-4">📨 Lamaran Saya</h2>
+    {% if lamaran %}
+    <div class="divide-y divide-slate-100">
+      {% for l in lamaran %}
+      <div class="flex justify-between items-center py-3.5">
+        <div><a href="/loker/{{ l.job_id }}" class="font-bold text-indigo-700 hover:underline">{{ l.title }}</a>
+          <div class="text-xs text-slate-500 mt-0.5">{{ l.company_name }}</div></div>
+        <div class="text-center bg-slate-50 rounded-xl px-4 py-1.5">
+          <span class="font-extrabold {% if l.ai_score >= 75 %}text-emerald-600{% elif l.ai_score >= 50 %}text-amber-600{% else %}text-slate-400{% endif %}">{{ l.ai_score }}</span><span class="text-xs text-slate-400">/100</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-sm text-slate-400">Belum ada lamaran. <a href="/loker" class="text-indigo-700 font-bold">Cari lowongan →</a></p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

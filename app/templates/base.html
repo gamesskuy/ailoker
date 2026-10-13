@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}AILoker{% endblock %} — Lowongan Kerja AI Indonesia</title>
+<meta name="description" content="AILoker: kopilot karier bertenaga AI untuk pencari kerja dan asisten rekrutmen untuk perusahaan di Indonesia.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif; }
+  .grad-text { background: linear-gradient(120deg, #4f46e5, #9333ea); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .grad-bg { background: linear-gradient(120deg, #4f46e5, #7c3aed); }
+  .grad-bg-soft { background: linear-gradient(180deg, #eef2ff 0%, #faf5ff 60%, #f8fafc 100%); }
+  .card-hover { transition: transform .18s ease, box-shadow .18s ease; }
+  .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 28px -12px rgba(79,70,229,.25); }
+  .btn-primary { background: linear-gradient(120deg, #4f46e5, #7c3aed); transition: filter .15s ease, transform .15s ease; }
+  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
+
+<nav class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2.5">
+      <span class="grad-bg text-white font-extrabold w-9 h-9 rounded-xl grid place-items-center text-lg shadow-md shadow-indigo-200">A</span>
+      <span class="text-xl font-extrabold tracking-tight text-slate-900">AILoker</span>
+    </a>
+    <div class="flex items-center gap-2 md:gap-5 text-sm font-medium">
+      <a href="/loker" class="text-slate-600 hover:text-indigo-700 px-2 py-1">Cari Loker</a>
+      {% if user %}
+        {% if user.role == 'seeker' %}
+          <a href="/profil" class="text-slate-600 hover:text-indigo-700 px-2 py-1">Profil Saya</a>
+        {% else %}
+          <a href="/perusahaan" class="text-slate-600 hover:text-indigo-700 px-2 py-1">Dashboard</a>
+        {% endif %}
+        <span class="hidden md:inline text-slate-400">Halo, <strong class="text-slate-700">{{ user.name }}</strong></span>
+        <form action="/keluar" method="post" class="inline">
+          <button class="border border-slate-300 text-slate-600 hover:bg-slate-100 px-3 py-1.5 rounded-lg">Keluar</button>
+        </form>
+      {% else %}
+        <a href="/masuk" class="text-slate-600 hover:text-indigo-700 px-2 py-1">Masuk</a>
+        <a href="/daftar" class="btn-primary text-white font-semibold px-4 py-2 rounded-lg shadow-md shadow-indigo-200">Daftar Gratis</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+{% if msg %}
+<div class="max-w-6xl mx-auto px-4 mt-4 w-full">
+  <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl text-sm font-medium shadow-sm">{{ msg }}</div>
+</div>
+{% endif %}
+
+<main class="flex-1 w-full">
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="bg-slate-900 text-slate-400 mt-16">
+  <div class="max-w-6xl mx-auto px-4 py-12 grid md:grid-cols-4 gap-8 text-sm">
+    <div class="md:col-span-2">
+      <div class="flex items-center gap-2.5 mb-3">
+        <span class="grad-bg text-white font-extrabold w-8 h-8 rounded-lg grid place-items-center">A</span>
+        <span class="text-lg font-extrabold text-white">AILoker</span>
+      </div>
+      <p class="leading-relaxed max-w-sm">Kopilot karier bertenaga AI untuk pencari kerja Indonesia — dan asisten rekrutmen cerdas untuk perusahaan. Lamar lebih tepat, rekrut lebih cepat.</p>
+    </div>
+    <div>
+      <div class="text-white font-bold mb-3">Pencari Kerja</div>
+      <ul class="space-y-2">
+        <li><a href="/loker" class="hover:text-white">Cari lowongan</a></li>
+        <li><a href="/daftar" class="hover:text-white">Buat akun gratis</a></li>
+        <li><a href="/profil" class="hover:text-white">Analisis CV dengan AI</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="text-white font-bold mb-3">Perusahaan</div>
+      <ul class="space-y-2">
+        <li><a href="/daftar" class="hover:text-white">Daftar sebagai perusahaan</a></li>
+        <li><a href="/perusahaan/loker/baru" class="hover:text-white">Pasang lowongan</a></li>
+        <li><a href="/masuk" class="hover:text-white">Masuk dashboard</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 py-5 text-xs flex flex-col md:flex-row justify-between gap-2">
+      <span>© 2026 AILoker. Seluruh hak cipta dilindungi.</span>
+      <span>Dibuat dengan bangga di Indonesia 🇮🇩</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
